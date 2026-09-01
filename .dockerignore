@@ -1,0 +1,16 @@
+node_modules
+vendor
+.git
+.gitignore
+.env
+.env.*
+storage/*.key
+storage/logs/*
+public/hot
+public/storage
+bootstrap/cache/*.php
+phpunit.xml
+coverage
+npm-debug.log
+yarn-error.log
+.DS_Store
