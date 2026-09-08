@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import { Head, useForm } from '@inertiajs/vue3';
-import { LoaderCircle, Mail, Coffee, User } from 'lucide-vue-next';
+import { LoaderCircle, Mail, Coffee, User, ClipboardList, CupSoda, Users } from 'lucide-vue-next';
 import InputError from '@/components/InputError.vue';
 import TextLink from '@/components/TextLink.vue';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
-import BrandPanel from '@/components/auth/BrandPanel.vue';
 import IconInput from '@/components/auth/IconInput.vue';
 import PasswordInput from '@/components/auth/PasswordInput.vue';
 import ThemeToggle from '@/components/ThemeToggle.vue';
@@ -33,9 +32,8 @@ const submit = () => {
 
   <div class="flex min-h-screen items-center justify-center bg-[#F7F3EE] p-4 dark:bg-[#101A16]">
     <div class="flex w-full max-w-5xl overflow-hidden rounded-3xl bg-white shadow-2xl dark:bg-[#16221D]">
-      <BrandPanel />
 
-      <!-- Right side -->
+      <!-- Left: form -->
       <div class="relative flex w-full flex-col justify-center px-6 py-10 sm:px-10 md:w-[55%] md:px-14">
         <div class="absolute right-6 top-6">
           <ThemeToggle />
@@ -55,8 +53,8 @@ const submit = () => {
             <div class="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-[#1F3930]/10 dark:bg-white/10">
               <Coffee class="h-6 w-6 text-[#1F3930] dark:text-white" />
             </div>
-            <h2 class="text-3xl font-bold text-[#211812] dark:text-white">Welcome Back!</h2>
-            <p class="mt-1 text-sm text-[#211812]/60 dark:text-white/50">Sign in to continue to your account</p>
+            <h2 class="text-3xl font-bold text-[#211812] dark:text-white">Log in to your account</h2>
+            <p class="mt-1 text-sm text-[#211812]/60 dark:text-white/50">Welcome back! Please enter your details to sign in.</p>
           </div>
 
           <div v-if="status" class="mb-4 rounded-lg bg-green-50 px-3 py-2 text-center text-sm font-medium text-green-700">
@@ -112,18 +110,11 @@ const submit = () => {
               type="submit"
               tabindex="5"
               :disabled="form.processing"
-              class="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#1F3930] text-sm font-semibold text-white shadow-md transition-all hover:bg-[#284A3D] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-70"
+              class="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#1F3930] text-sm font-semibold text-white shadow-md transition-colors hover:bg-[#284A3D] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-70"
             >
               <LoaderCircle v-if="form.processing" class="h-4 w-4 animate-spin" />
-              <Coffee v-else class="h-4 w-4" />
-              Sign In
+              Log In
             </button>
-
-            <div class="flex items-center gap-3 text-xs text-[#211812]/40 dark:text-white/30">
-              <span class="h-px flex-1 bg-[#E5E1DD] dark:bg-white/10" />
-              or continue with
-              <span class="h-px flex-1 bg-[#E5E1DD] dark:bg-white/10" />
-            </div>
 
             <TextLink
               :href="route('login', { as: 'cashier' })"
@@ -138,6 +129,53 @@ const submit = () => {
           <p class="mt-10 text-center text-xs text-[#211812]/40 dark:text-white/30">
             © 2024 JC66 Coffee Shop. All rights reserved.
           </p>
+        </div>
+      </div>
+
+      <!-- Right: solid brand panel -->
+      <div class="relative hidden w-[45%] flex-col justify-center overflow-hidden bg-[#1F3930] px-10 md:flex">
+        <!-- pointer notch to echo the two-panel shape -->
+        <div class="absolute -left-6 top-1/2 h-12 w-12 -translate-y-1/2 rotate-45 bg-[#1F3930]" />
+
+        <div class="relative z-10 mx-auto flex w-full max-w-xs flex-col items-center text-center">
+          <!-- floating icon badges -->
+          <div class="relative mb-8 flex h-40 w-40 items-center justify-center">
+            <div class="absolute h-40 w-40 rounded-full bg-white/5" />
+            <div class="absolute h-28 w-28 rounded-full bg-white/5" />
+
+            <div class="absolute -left-2 top-2 flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-lg">
+              <CupSoda class="h-4 w-4 text-[#1F3930]" />
+            </div>
+            <div class="absolute -right-2 top-8 flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-lg">
+              <ClipboardList class="h-4 w-4 text-[#1F3930]" />
+            </div>
+            <div class="absolute -left-1 bottom-1 flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-lg">
+              <Users class="h-4 w-4 text-[#1F3930]" />
+            </div>
+
+            <!-- mock dashboard card -->
+            <div class="flex h-24 w-32 flex-col justify-center gap-2 rounded-xl bg-white/95 p-3 shadow-xl">
+              <div class="flex gap-1">
+                <span class="h-1.5 w-1.5 rounded-full bg-[#E5B94B]" />
+                <span class="h-1.5 w-1.5 rounded-full bg-[#6B4532]" />
+                <span class="h-1.5 w-1.5 rounded-full bg-[#1F3930]" />
+              </div>
+              <span class="h-1.5 w-full rounded-full bg-[#1F3930]/70" />
+              <span class="h-1.5 w-3/4 rounded-full bg-[#1F3930]/30" />
+              <span class="h-1.5 w-5/6 rounded-full bg-[#1F3930]/30" />
+            </div>
+          </div>
+
+          <h3 class="text-xl font-bold text-white">Run your shop from one place.</h3>
+          <p class="mt-2 text-sm text-white/70">
+            Orders, staff, and sales — everything JC66 needs, in one easy dashboard.
+          </p>
+
+          <div class="mt-8 flex gap-2">
+            <span class="h-1.5 w-1.5 rounded-full bg-white/30" />
+            <span class="h-1.5 w-6 rounded-full bg-white" />
+            <span class="h-1.5 w-1.5 rounded-full bg-white/30" />
+          </div>
         </div>
       </div>
     </div>
