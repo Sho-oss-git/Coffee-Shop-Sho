@@ -38,7 +38,7 @@ const props = defineProps<{
 }>();
 const { canManageInventory } = usePermissions();
 
-const breadcrumbs: BreadcrumbItem[] = [{ title: 'Cookie Inventory', href: '/inventory/cookies' }];
+const breadcrumbs: BreadcrumbItem[] = [{ title: 'Pastries & Baked Goods', href: '/inventory/cookies' }];
 
 const page = usePage<{ flash?: { success?: string; error?: string } }>();
 
@@ -145,7 +145,7 @@ const projectedStock = computed(() => {
 </script>
 
 <template>
-    <Head title="Cookie Inventory" />
+    <Head title="Pastries & Baked Goods" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <!-- Toast notification -->
@@ -174,7 +174,7 @@ const projectedStock = computed(() => {
             <!-- Header -->
             <div class="flex flex-wrap items-center justify-between gap-3">
                 <div>
-                    <h1 class="text-xl font-semibold text-foreground">Cookie Inventory</h1>
+                    <h1 class="text-xl font-semibold text-foreground">Pastries & Baked Goods</h1>
                     <p class="text-sm text-foreground/60">
                         On-hand stock counts for finished products. To add a new item, use the Products page.
                     </p>
@@ -210,13 +210,13 @@ const projectedStock = computed(() => {
                     <Input v-model="search" type="text" placeholder="Search items..." class="pl-9" />
                 </div>
 
-                <select
+                <!-- <select
                     v-model="categoryFilter"
                     class="h-9 min-w-[140px] rounded-md border border-input bg-background px-3 text-sm text-foreground shadow-sm focus:outline-none focus:ring-1 focus:ring-ring"
                 >
                     <option value="">All Categories</option>
                     <option v-for="cat in props.categories" :key="cat.id" :value="cat.name">{{ cat.name }}</option>
-                </select>
+                </select> -->
 
                 <Button v-if="hasActiveFilters" variant="ghost" size="sm" @click="clearFilters">Clear filters</Button>
                 <Loader2 v-if="isFiltering" class="h-4 w-4 animate-spin text-foreground/60" />
