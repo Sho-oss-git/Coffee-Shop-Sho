@@ -64,7 +64,24 @@ function money(value: number | string) {
 }
 
 function formatDateLabel(value: string) {
-    return new Date(value).toLocaleDateString('en-PH', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+    if (!value) {
+        return 'Sales';
+    }
+
+    if (value === 'all') {
+        return 'All time';
+    }
+
+    if (/^\d{4}$/.test(value)) {
+        return `${value} Sales`;
+    }
+
+    const parsed = new Date(value);
+    if (Number.isNaN(parsed.getTime())) {
+        return 'Sales';
+    }
+
+    return parsed.toLocaleDateString('en-PH', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
 }
 
 function paymentLabel(method: string | null) {
@@ -83,7 +100,7 @@ const highlight = computed(() => {
 
 // ---- Stat cards, styled like the dashboard's icon metric cards ----
 const metrics = computed(() => [
-    { label: "Today's sales", value: money(props.summary.total_sales), icon: Banknote, tone: 'text-emerald-600', surface: 'bg-emerald-500/10' },
+    { label: 'Year total sales', value: money(props.summary.total_sales), icon: Banknote, tone: 'text-emerald-600', surface: 'bg-emerald-500/10' },
     { label: 'Transactions', value: props.summary.transaction_count, icon: ShoppingBag, tone: 'text-sky-600', surface: 'bg-sky-500/10' },
     { label: 'Items sold', value: props.summary.items_sold, icon: Package, tone: 'text-amber-600', surface: 'bg-amber-500/10' },
     { label: 'Average sale', value: money(props.summary.average_sale), icon: TrendingUp, tone: 'text-violet-600', surface: 'bg-violet-500/10' },
@@ -119,14 +136,8 @@ const donutGradient = computed(() => {
                 <div>
                     <p class="text-sm font-medium text-foreground/70">{{ formatDateLabel(date) }}</p>
                     <h1 class="text-2xl font-semibold tracking-tight sm:text-3xl text-foreground">Sales Monitoring</h1>
-                    <p class="text-sm text-foreground/60">Live view of today's sales.</p>
+                    <p class="text-sm text-foreground/60">Live view of this year's sales.</p>
                 </div>
-                <Link
-                    :href="route('sales-history')"
-                    class="inline-flex items-center justify-center gap-2 rounded-md border bg-background px-3 py-2 text-sm font-medium text-foreground shadow-sm hover:bg-muted"
-                >
-                    View all transactions <ArrowUpRight class="h-4 w-4" />
-                </Link>
             </div>
 
             <!-- Highlight banner -->
@@ -136,7 +147,7 @@ const donutGradient = computed(() => {
                         <Sparkles class="h-5 w-5 text-amber-300" />
                     </span>
                     <div>
-                        <p class="text-sm font-semibold">Today's highlight</p>
+                        <p class="text-sm font-semibold">Yearly sales highlight</p>
                         <p class="text-sm text-emerald-50/85">{{ highlight }}</p>
                     </div>
                 </div>
@@ -161,9 +172,9 @@ const donutGradient = computed(() => {
                     <div class="flex flex-wrap items-center justify-between gap-2 border-b p-4">
                         <div>
                             <h2 class="font-semibold text-foreground">Recent Transactions</h2>
-                            <p class="text-xs text-foreground/60">Latest sales as they come in</p>
+                            <p class="text-xs text-foreground/60">Latest sales this year</p>
                         </div>
-                        <Link :href="route('sales-history')" class="text-sm text-primary hover:underline"> View All → </Link>
+                        <!-- <Link :href="route('sales-history')" class="text-sm text-primary hover:underline"> View All → </Link> -->
                     </div>
                     <div class="overflow-x-auto">
                         <table class="w-full min-w-[620px] text-sm">
@@ -192,7 +203,7 @@ const donutGradient = computed(() => {
                                     <td class="p-2 capitalize text-foreground">{{ t.status }}</td>
                                 </tr>
                                 <tr v-if="!recentTransactions.length">
-                                    <td colspan="6" class="p-4 text-center text-foreground/60">No transactions yet today</td>
+                                    <td colspan="6" class="p-4 text-center text-foreground/60">No completed transactions yet</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -203,7 +214,7 @@ const donutGradient = computed(() => {
                 <section class="flex flex-col gap-4 rounded-xl border bg-background p-4 shadow-sm">
                     <div>
                         <h2 class="font-semibold text-foreground">Payment methods</h2>
-                        <p class="text-xs text-foreground/60">Today's transactions by method</p>
+                        <p class="text-xs text-foreground/60">Sales by payment method</p>
                     </div>
 
                     <div v-if="salesByPaymentMethod.length" class="flex flex-col items-center gap-4 py-2">
@@ -224,7 +235,7 @@ const donutGradient = computed(() => {
                             </div>
                         </div>
                     </div>
-                    <p v-else class="py-8 text-center text-sm text-foreground/60">No sales yet today</p>
+                    <p v-else class="py-8 text-center text-sm text-foreground/60">No sales recorded yet this year</p>
                 </section>
             </div>
 
@@ -232,8 +243,8 @@ const donutGradient = computed(() => {
                 <!-- Top products -->
                 <section class="rounded-xl border bg-background shadow-sm">
                     <div class="border-b p-4">
-                        <h2 class="font-semibold text-foreground">Today's Top Products</h2>
-                        <p class="text-xs text-foreground/60">Best sellers so far today</p>
+                        <h2 class="font-semibold text-foreground">Top Products</h2>
+                        <p class="text-xs text-foreground/60">Best sellers this year</p>
                     </div>
                     <ol class="divide-y">
                         <li v-for="(product, index) in topProducts" :key="product.name" class="flex items-center justify-between p-3 text-sm">
@@ -245,7 +256,7 @@ const donutGradient = computed(() => {
                             </span>
                             <span class="font-medium text-foreground">{{ product.quantity }} sold</span>
                         </li>
-                        <li v-if="!topProducts.length" class="p-4 text-center text-sm text-foreground/60">No sales yet today</li>
+                        <li v-if="!topProducts.length" class="p-4 text-center text-sm text-foreground/60">No sales recorded yet this year</li>
                     </ol>
                 </section>
 
@@ -253,7 +264,7 @@ const donutGradient = computed(() => {
                 <section class="rounded-xl border bg-background shadow-sm">
                     <div class="border-b p-4">
                         <h2 class="font-semibold text-foreground">Sales by Cashier</h2>
-                        <p class="text-xs text-foreground/60">Performance per cashier today</p>
+                        <p class="text-xs text-foreground/60">Performance per cashier this year</p>
                     </div>
                     <table class="w-full text-sm">
                         <thead class="bg-muted/50">
@@ -270,7 +281,7 @@ const donutGradient = computed(() => {
                                 <td class="p-2 text-right text-foreground">{{ money(c.sales) }}</td>
                             </tr>
                             <tr v-if="!salesByCashier.length">
-                                <td colspan="3" class="p-4 text-center text-foreground/60">No sales yet today</td>
+                                <td colspan="3" class="p-4 text-center text-foreground/60">No sales yet this year</td>
                             </tr>
                         </tbody>
                     </table>

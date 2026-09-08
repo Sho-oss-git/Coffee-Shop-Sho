@@ -215,9 +215,9 @@ const peakLabel = computed(() => {
                 <div class="flex w-full flex-wrap items-center justify-between gap-3 sm:w-auto sm:justify-end">
                     <span class="text-sm font-semibold tabular-nums text-foreground/70" aria-live="polite">{{ currentTime }}</span>
 
-                    <a v-if="page.props.auth.user.role !== 'cashier'" href="/reports/sales" class="inline-flex w-full items-center justify-center gap-2 rounded-md border bg-background px-3 py-2 text-sm font-medium text-foreground shadow-sm hover:bg-muted sm:w-auto">
+                    <!-- <a v-if="page.props.auth.user.role !== 'cashier'" href="/reports/sales" class="inline-flex w-full items-center justify-center gap-2 rounded-md border bg-background px-3 py-2 text-sm font-medium text-foreground shadow-sm hover:bg-muted sm:w-auto">
                         View sales report <ArrowUpRight class="h-4 w-4" />
-                    </a>
+                    </a> -->
                 </div>
             </div>
 
@@ -248,7 +248,7 @@ const peakLabel = computed(() => {
                         Review requests
                     </a>
                     <a v-if="page.props.auth.user.role !== 'cashier'" href="/reports/sales" class="inline-flex items-center justify-center rounded-md bg-amber-400 px-3 py-2 text-sm font-semibold text-emerald-950 hover:bg-amber-300">
-                        View analysis
+                         View sales report
                     </a>
                 </div>
             </div>

@@ -272,11 +272,11 @@ class TransactionController extends Controller
      */
     public function saleTransaction(Request $request)
     {
-        $today = now()->toDateString();
+        $year = now()->year;
 
         $transactions = Transaction::with(['items', 'user:id,name'])
             ->where('status', 'completed')
-            ->whereDate('created_at', $today)
+            ->whereYear('created_at', $year)
             ->orderBy('created_at')
             ->get();
 
@@ -367,7 +367,7 @@ class TransactionController extends Controller
             'topProducts' => $topProducts,
             'salesByCashier' => $salesByCashier,
             'salesByPaymentMethod' => $salesByPaymentMethod,
-            'date' => $today,
+            'date' => (string) $year,
         ]);
     }
 
