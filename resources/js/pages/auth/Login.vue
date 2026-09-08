@@ -116,18 +116,18 @@ const submit = () => {
               Log In
             </button>
 
-            <TextLink
+            <!-- <TextLink
               :href="route('login', { as: 'cashier' })"
               tabindex="6"
               class="flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-[#E5E1DD] text-sm font-semibold text-[#211812] transition-colors hover:bg-[#F7F3EE] dark:border-white/10 dark:text-white dark:hover:bg-white/5"
             >
               <User class="h-4 w-4" />
               Sign in as Cashier
-            </TextLink>
+            </TextLink> -->
           </form>
 
           <p class="mt-10 text-center text-xs text-[#211812]/40 dark:text-white/30">
-            © 2024 JC66 Coffee Shop. All rights reserved.
+            @2026 JC66 Coffee Shop. All rights reserved.
           </p>
         </div>
       </div>
@@ -171,11 +171,11 @@ const submit = () => {
             Orders, staff, and sales — everything JC66 needs, in one easy dashboard.
           </p>
 
-          <div class="mt-8 flex gap-2">
+          <!-- <div class="mt-8 flex gap-2">
             <span class="h-1.5 w-1.5 rounded-full bg-white/30" />
             <span class="h-1.5 w-6 rounded-full bg-white" />
             <span class="h-1.5 w-1.5 rounded-full bg-white/30" />
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
