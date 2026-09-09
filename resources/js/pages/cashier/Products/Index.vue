@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import AppLayout from '@/layouts/AppLayout.vue';
 import { Input } from '@/components/ui/input';
+import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem } from '@/types';
 import { Head, router, useForm, usePage } from '@inertiajs/vue3';
 import { ImageOff, Loader2, Search } from 'lucide-vue-next';
 import { computed, ref, watch } from 'vue';
-import OrderSummary from './OrderSummary.vue';
 import OrderOptions from './OrderOptions.vue';
+import OrderSummary from './OrderSummary.vue';
 import TransactionComplete from './TransactionComplete.vue';
 import TransactionReceipt from './TransactionReceipt.vue';
 
@@ -325,7 +325,7 @@ function handlePrintReceipt() {
             </div>
         </Transition>
 
-        <div class="grid h-full flex-1 grid-cols-1 gap-4 p-3 sm:p-4 lg:grid-cols-[1fr_320px] xl:grid-cols-[1fr_360px]">
+        <div class="grid h-full flex-1 grid-cols-1 gap-4 p-3 sm:p-4 lg:grid-cols-[1fr_340px] xl:grid-cols-[1fr_380px]">
             <!-- Left: Product listing -->
             <div class="flex min-w-0 flex-col gap-4">
                 <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -405,9 +405,7 @@ function handlePrintReceipt() {
                                         <h3 class="truncate text-xs font-semibold text-[#f5efe0] sm:text-sm" :title="product.name">
                                             {{ product.name }}
                                         </h3>
-                                        <p class="text-xs font-bold text-[#d8a851] sm:text-sm">
-                                            ₱{{ Number(product.price).toFixed(2) }}
-                                        </p>
+                                        <p class="text-xs font-bold text-[#d8a851] sm:text-sm">₱{{ Number(product.price).toFixed(2) }}</p>
                                         <p v-if="product.stock_left !== null" class="truncate text-[11px] text-[#9db8ae] sm:text-xs">
                                             {{ product.stock_left }} pcs left
                                         </p>
@@ -462,10 +460,6 @@ function handlePrintReceipt() {
             @print-receipt="handlePrintReceipt"
         />
 
-        <TransactionReceipt
-            v-if="completedTransaction"
-            :transaction="completedTransaction"
-        />
-
+        <TransactionReceipt v-if="completedTransaction" :transaction="completedTransaction" />
     </AppLayout>
 </template>

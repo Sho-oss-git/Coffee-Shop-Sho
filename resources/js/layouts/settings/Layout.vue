@@ -24,7 +24,7 @@ const sidebarNavItems: NavItem[] = [
     ...(isAdmin
         ? [
               {
-                  title: 'Shop',
+                     title: 'Shop Branding',
                   href: '/settings/shop',
               },
           ]

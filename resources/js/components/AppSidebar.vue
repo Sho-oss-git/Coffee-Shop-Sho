@@ -104,6 +104,12 @@ const allNavGroups: RoleNavGroup[] = [
                 roles: ['admin', 'manager'],
             },
             {
+                title: 'My Action Requests',
+                href: '/action-requests',
+                icon: ClipboardList,
+                roles: ['cashier'],
+            },
+            {
                 title: 'Sales Report',
                 href: '/reports/sales',
                 icon: PieChart,

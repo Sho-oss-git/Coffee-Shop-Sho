@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
-import { AlertCircle, Coffee, Minus, Pencil, Plus, ShoppingBag, Upload, X } from 'lucide-vue-next';
 import { Button } from '@/components/ui/button';
+import { AlertCircle, Coffee, Minus, Pencil, Plus, ShoppingBag, Upload, X } from 'lucide-vue-next';
+import { computed, ref } from 'vue';
 
 export interface CartItem {
     id: number;
@@ -57,9 +57,7 @@ const change = computed(() => Math.max(0, receivedNumber.value - total.value));
 const shortAmount = computed(() => Math.max(0, total.value - receivedNumber.value));
 const hasEnteredAmount = computed(() => amountReceived.value !== '');
 
-const canCompleteCashSale = computed(
-    () => props.items.length > 0 && hasOrderDetails.value && receivedNumber.value >= total.value,
-);
+const canCompleteCashSale = computed(() => props.items.length > 0 && hasOrderDetails.value && receivedNumber.value >= total.value);
 
 function handleCompleteSale() {
     if (!canCompleteCashSale.value) return;
@@ -170,47 +168,62 @@ defineExpose({ resetPayment });
         </button>
 
         <!-- Items -->
-        <div class="flex-1 overflow-y-auto px-4 py-3">
-            <div v-if="items.length === 0" class="flex h-full min-h-[160px] flex-col items-center justify-center gap-2 text-center text-muted-foreground">
+        <div class="min-h-0 flex-1 overflow-y-auto px-4 py-3">
+            <div
+                v-if="items.length === 0"
+                class="flex h-full min-h-[160px] flex-col items-center justify-center gap-2 text-center text-muted-foreground"
+            >
                 <ShoppingBag class="h-8 w-8" />
                 <p class="text-sm">No items yet.</p>
                 <p class="text-xs">Tap a product to add it here.</p>
             </div>
 
-            <div v-else class="flex flex-col gap-3">
-                <div
-                    v-for="item in items"
-                    :key="item.id"
-                    class="flex items-center justify-between gap-2 border-b border-sidebar-border/60 pb-3 last:border-b-0 last:pb-0"
-                >
-                    <div class="min-w-0 flex-1">
-                        <p class="truncate text-sm font-semibold">{{ item.name }}</p>
-                        <p class="text-xs text-muted-foreground">{{ formatCurrency(item.price) }}</p>
-                    </div>
-
-                    <div class="flex items-center gap-1.5">
+            <div v-else class="flex flex-col gap-2.5">
+                <div v-for="item in items" :key="item.id" class="rounded-xl border-2 border-sidebar-border/70 bg-background p-3 shadow-sm">
+                    <div class="flex items-start justify-between gap-2">
+                        <p class="min-w-0 flex-1 break-words text-base font-bold leading-snug text-foreground">
+                            {{ item.name }}
+                        </p>
                         <button
                             type="button"
-                            class="flex h-6 w-6 items-center justify-center rounded-md border border-input text-muted-foreground hover:bg-muted"
-                            @click="emit('decrement', item.id)"
+                            class="shrink-0 rounded-md p-1 text-muted-foreground hover:bg-muted hover:text-destructive"
+                            :aria-label="`Remove ${item.name}`"
+                            @click="emit('remove', item.id)"
                         >
-                            <Minus class="h-3 w-3" />
-                        </button>
-                        <span class="w-5 text-center text-sm font-medium">{{ item.qty }}</span>
-                        <button
-                            type="button"
-                            class="flex h-6 w-6 items-center justify-center rounded-md border border-input text-muted-foreground hover:bg-muted"
-                            @click="emit('increment', item.id)"
-                        >
-                            <Plus class="h-3 w-3" />
+                            <X class="h-4 w-4" />
                         </button>
                     </div>
 
-                    <div class="flex w-20 items-center justify-end gap-1.5">
-                        <span class="text-sm font-semibold">{{ formatCurrency(item.price * item.qty) }}</span>
-                        <button type="button" class="text-muted-foreground hover:text-destructive" @click="emit('remove', item.id)">
-                            <X class="h-3.5 w-3.5" />
-                        </button>
+                    <div class="mt-1.5 flex items-center justify-between gap-2">
+                        <p class="text-sm font-medium text-foreground/80">{{ formatCurrency(item.price) }}</p>
+                        <p class="shrink-0 whitespace-nowrap text-base font-extrabold text-foreground">
+                            {{ formatCurrency(item.price * item.qty) }}
+                        </p>
+                    </div>
+
+                    <div class="mt-2 flex items-center justify-between gap-2 border-t border-sidebar-border/50 pt-2">
+                        <span class="text-xs font-medium text-muted-foreground">Qty</span>
+                        <div class="flex shrink-0 items-center gap-2">
+                            <button
+                                type="button"
+                                class="flex h-8 w-8 items-center justify-center rounded-lg border-2 border-input bg-muted/50 font-bold text-foreground hover:bg-muted"
+                                :aria-label="`Decrease ${item.name} quantity`"
+                                @click="emit('decrement', item.id)"
+                            >
+                                <Minus class="h-4 w-4" />
+                            </button>
+                            <span class="min-w-8 rounded-md bg-[#173832] px-2 py-1 text-center text-base font-bold tabular-nums text-[#f5efe0]">{{
+                                item.qty
+                            }}</span>
+                            <button
+                                type="button"
+                                class="flex h-8 w-8 items-center justify-center rounded-lg border-2 border-input bg-muted/50 font-bold text-foreground hover:bg-muted"
+                                :aria-label="`Increase ${item.name} quantity`"
+                                @click="emit('increment', item.id)"
+                            >
+                                <Plus class="h-4 w-4" />
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -258,9 +271,7 @@ defineExpose({ resetPayment });
                 <div class="flex flex-col gap-2">
                     <label class="text-xs font-medium text-muted-foreground">Amount Received</label>
                     <div class="relative">
-                        <span class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm font-semibold text-[#d8a851]">
-                            ₱
-                        </span>
+                        <span class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm font-semibold text-[#d8a851]"> ₱ </span>
                         <input
                             v-model="amountReceived"
                             type="number"
@@ -311,29 +322,27 @@ defineExpose({ resetPayment });
             <!-- GCASH fields -->
             <template v-else>
                 <div class="flex flex-col gap-2">
-                    <label class="text-xs font-medium text-muted-foreground">GCash Reference Number</label>
+                    <label class="text-sm font-semibold text-foreground">GCash Reference Number</label>
                     <input
                         v-model="referenceNumber"
                         type="text"
                         maxlength="50"
                         placeholder="e.g. 1234567890123"
-                        class="h-10 w-full rounded-lg border-2 border-[#2a5049]/40 bg-background px-3 text-sm shadow-sm transition-colors focus:border-[#d8a851] focus:outline-none focus:ring-2 focus:ring-[#d8a851]/30"
+                        class="h-11 w-full rounded-lg border-2 border-[#2a5049]/40 bg-background px-3 text-base font-semibold text-[#173832] shadow-sm transition-colors placeholder:font-normal placeholder:text-muted-foreground/60 focus:border-[#d8a851] focus:outline-none focus:ring-2 focus:ring-[#d8a851]/30 dark:text-[#f5efe0]"
                     />
                 </div>
 
                 <div class="flex flex-col gap-2">
-                    <label class="text-xs font-medium text-muted-foreground">Amount Paid</label>
+                    <label class="text-sm font-semibold text-foreground">Amount Paid</label>
                     <div class="relative">
-                        <span class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm font-semibold text-[#d8a851]">
-                            ₱
-                        </span>
+                        <span class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm font-semibold text-[#d8a851]"> ₱ </span>
                         <input
                             v-model="amountPaid"
                             type="number"
                             min="0"
                             step="0.01"
                             placeholder="0.00"
-                            class="no-spinner h-10 w-full rounded-lg border-2 border-[#2a5049]/40 bg-background pl-7 pr-3 text-right text-sm font-semibold shadow-sm transition-colors focus:border-[#d8a851] focus:outline-none focus:ring-2 focus:ring-[#d8a851]/30"
+                            class="no-spinner h-11 w-full rounded-lg border-2 border-[#2a5049]/40 bg-background pl-7 pr-3 text-right text-lg font-semibold text-[#173832] shadow-sm transition-colors placeholder:font-normal placeholder:text-muted-foreground/60 focus:border-[#d8a851] focus:outline-none focus:ring-2 focus:ring-[#d8a851]/30 dark:text-[#f5efe0]"
                         />
                     </div>
                     <p v-if="gcashShortAmount > 0 && hasEnteredAmountPaid" class="flex items-center gap-1 text-xs text-destructive">
